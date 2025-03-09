@@ -4,7 +4,12 @@ import { ImageBackground, Image, Text, View } from "react-native";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 
-function TabIcon({ focused, icon, title }: any) {
+interface TabIconProps {
+  focused: boolean;
+  icon: any;
+  title: string
+}
+function TabIcon({ focused, icon, title }: TabIconProps) {
   if (focused) {
     return (
       <ImageBackground
@@ -43,6 +48,7 @@ export default function TabsLayout() {
           marginHorizontal: 20,
           marginBottom: 36,
           height: 52,
+          paddingHorizontal: 10,
           position: "absolute",
           overflow: "hidden",
           borderWidth: 1,
@@ -73,7 +79,7 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="save"
+        name="saved"
         options={{
           title: "Save",
           headerShown: false,

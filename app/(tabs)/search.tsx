@@ -6,6 +6,7 @@ import useFetch from '@/services/useFetch'
 import { fetchMovies } from '@/services/api'
 import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
+import { updateSearchCount } from '@/services/appwrite'
 
 const search = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -28,6 +29,7 @@ const search = () => {
   }, [searchQuery]);
 
   useEffect(() => {
+    
     const searchMovies = async() => {
       if(debouncedQuery.trim()) {
         await loadMovies()
@@ -37,6 +39,13 @@ const search = () => {
     }
     searchMovies();
   },[debouncedQuery])
+  
+  useEffect(() => {
+    if(movies?.length > 0 && movies?.[0]) {
+      updateSearchCount({query: debouncedQuery, movie:movies[0]})
+    }
+  },[movies])
+
 
   return (
     <View className='flex-1 bg-primary'>

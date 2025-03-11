@@ -8,7 +8,7 @@ import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
 import { updateSearchCount } from '@/services/appwrite'
 
-const search = () => {
+const Search = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const {
@@ -51,8 +51,8 @@ const search = () => {
     <View className='flex-1 bg-primary'>
       <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover'/>
       <FlatList 
-        data = {movies}
-        renderItem={({ item }) => <MovieCard { ...item } />}
+        data={movies}
+        renderItem={({ item }) => <MovieCard {...item} />}
         keyExtractor={(item) => item.id.toString()} 
         className='px-5'
         numColumns={3}
@@ -61,14 +61,16 @@ const search = () => {
           gap: 16,
           marginVertical: 16
         }}
-        contentContainerStyle = {{ 
+        contentContainerStyle={{ 
           paddingBottom: 100
         }}
         ListEmptyComponent={
           !moviesLoading && !moviesError ? (
             <View className='mt-10 px-5 items-center'>
               <Text className='text-center text-gray-400 text-lg'>
-                {debouncedQuery.trim() ? 'No movies found for "' + debouncedQuery + '"' : 'Search for a movie to get started'}
+                {debouncedQuery.trim() 
+                  ? `No movies found for "${debouncedQuery}"` 
+                  : 'Search for a movie to get started'}
               </Text>
             </View>
           ) : null
@@ -85,26 +87,23 @@ const search = () => {
                 onChangeText={(text: string) => setSearchQuery(text)}
               />
             </View>
-            {
-              moviesLoading && (
-                <ActivityIndicator />
-              )
-            }
-            {
-              moviesError && (
-                <Text className='text-red-500 px-5 my-3'>
-                  Error: {moviesError.message}
-                </Text>
-              )
-            }
-            {
-              !moviesLoading && !moviesError && searchQuery.trim() && movies?.length > 0 && (
-                <Text className='text-xl text-white font-bold'>
-                  Search Results for{' '}
-                  <Text className='text-accent'>{searchQuery}</Text>
-                </Text>
-              )
-            }
+            {moviesLoading && (
+              <View className='items-center'>
+                <ActivityIndicator color="#fff" />
+                <Text className='text-white mt-2'>Searching...</Text>
+              </View>
+            )}
+            {moviesError && (
+              <Text className='text-red-500 px-5 my-3'>
+                Error: {moviesError.message}
+              </Text>
+            )}
+            {!moviesLoading && !moviesError && searchQuery.trim() && movies?.length > 0 && (
+              <Text className='text-xl text-white font-bold px-5'>
+                Search Results for{' '}
+                <Text className='text-accent'>{debouncedQuery}</Text>
+              </Text>
+            )}
           </>
         }
       />
@@ -112,4 +111,4 @@ const search = () => {
   )
 }
 
-export default search
+export default Search
